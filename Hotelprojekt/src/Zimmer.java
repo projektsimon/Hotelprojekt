@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,25 +12,9 @@ public class Zimmer extends JFrame {
 	private JPanel contentPane;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Zimmer frame = new Zimmer();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public Zimmer() {
+	public Zimmer(ActionListener listener) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -39,10 +24,12 @@ public class Zimmer extends JFrame {
 		
 		JButton btnUebersicht = new JButton("\u00DCbersicht");
 		btnUebersicht.setBounds(169, 62, 97, 25);
+		btnUebersicht.addActionListener(listener);
 		contentPane.add(btnUebersicht);
 		
 		JButton btnHinzufuegen = new JButton("Hinzuf\u00FCgen");
 		btnHinzufuegen.setBounds(169, 122, 97, 25);
+		btnHinzufuegen.addActionListener(listener);
 		contentPane.add(btnHinzufuegen);
 	}
 
