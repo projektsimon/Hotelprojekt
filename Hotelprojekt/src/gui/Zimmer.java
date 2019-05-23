@@ -1,3 +1,4 @@
+package gui;
 import java.awt.BorderLayout;
 
 import java.awt.EventQueue;
@@ -16,7 +17,7 @@ import javax.swing.JButton;
 
 
 
-public class Gaeste extends JFrame {
+public class Zimmer extends JFrame {
 
 
 
@@ -30,7 +31,7 @@ public class Gaeste extends JFrame {
 
 	 */
 
-	public Gaeste(ActionListener listener) {
+	public Zimmer(ActionListener listener) {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -56,17 +57,18 @@ public class Gaeste extends JFrame {
 
 		
 
-		JButton btnHinzufuegen = new JButton("Gast Hinzuf\u00FCgen");
+		JButton btnHinzufuegen = new JButton("Zimmer Hinzuf\u00FCgen");
 
-		btnHinzufuegen.setBounds(134, 124, 140, 25);
+		btnHinzufuegen.setBounds(124, 130, 181, 25);
 
 		btnHinzufuegen.addActionListener(listener);
 
 		contentPane.add(btnHinzufuegen);
 		
-		JButton btnGaesteliste = new JButton("G\u00E4steliste");
-		btnGaesteliste.setBounds(134, 86, 140, 25);
-		contentPane.add(btnGaesteliste);
+		JButton btnZimmerliste = new JButton("Zimmerliste");
+		btnZimmerliste.setBounds(124, 92, 181, 25);
+		btnZimmerliste.addActionListener(listener);
+		contentPane.add(btnZimmerliste);
 
 	}
 
