@@ -18,7 +18,7 @@ import model.Zimmer;
 public class Controller implements ActionListener {
 
     private Hauptoberfläche hauptfenster;
-    private Hinzu_Zimmer hinzuzimmer;
+    private ZimmerDialog hinzuzimmer;
 
     private Hotel hotel;
 
@@ -38,7 +38,7 @@ public class Controller implements ActionListener {
 
 	// GUI
 	hauptfenster = new Hauptoberfläche(this);
-	hinzuzimmer = new Hinzu_Zimmer(this);
+	hinzuzimmer = new ZimmerDialog(this);
 	hauptfenster.showData(hotel.getZimmerList());
 	hauptfenster.setVisible(true);
     }
@@ -46,21 +46,36 @@ public class Controller implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 	switch (e.getActionCommand()) {
-	case "Zimmer hinzufügen":
+	case "Zimmer hinzufügen / ändern":
 	    hinzuzimmer.setVisible(true);
+	    break;
+	    
+	case "Zimmer entfernen":
+	    int nummer = hinzuzimmer.entferneZimmer();
+	    System.out.println("Nummer: " + nummer);
+	    if(nummer > 0) {
+		if(hotel.zimmernummerVergeben(nummer)) {
+		    hotel.loescheZimmer(nummer);
+		    hauptfenster.showData(hotel.getZimmerList());
+		} else {
+		    hinzuzimmer.promptZimmerExistiertNicht();
+		}
+	    }
 	    break;
 
 	case "Zimmer speichern":
 	    Zimmer zimmer = hinzuzimmer.getZimmer();
-	    System.out.println(zimmer);
 	    if (hotel.zimmernummerVergeben(zimmer.getNummer())) {
-		hinzuzimmer.promptZimmernummerVergeben();
-	    } else {
-		hinzuzimmer.setVisible(false);
-		hotel.addNewZimmer(zimmer);
-		hinzuzimmer.resetDarstellung();
-		hauptfenster.showData(hotel.getZimmerList());
+		if(!hinzuzimmer.promptUeberschreiben()) {
+		    break;
+		} else {
+		    hotel.loescheZimmer(zimmer.getNummer());
+		}
 	    }
+	    hinzuzimmer.setVisible(false);
+	    hotel.addNewZimmer(zimmer);
+	    hinzuzimmer.resetDarstellung();
+	    hauptfenster.showData(hotel.getZimmerList());
 	    break;
 
 	case "Speichern & Verlassen":
@@ -106,11 +121,11 @@ public class Controller implements ActionListener {
 		switch (status) {
 		case 0:
 		    // Zimmer werden gelesen
-		    if (elemente.length == 8) {
+		    if (elemente.length == 7) {
 			hotel.addNewZimmer(new Zimmer(Integer.parseInt(elemente[0]), Integer.parseInt(elemente[1]),
 				Boolean.parseBoolean(elemente[2]), Boolean.parseBoolean(elemente[3]),
 				Boolean.parseBoolean(elemente[4]), Integer.parseInt(elemente[5]),
-				Integer.parseInt(elemente[6]), Boolean.parseBoolean(elemente[7])));
+				Integer.parseInt(elemente[6])));
 			//System.out.println("Gelesen:");
 		    }
 		}

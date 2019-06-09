@@ -8,10 +8,9 @@ public class Zimmer {
     private boolean minibar;
     private int preisWerktag;
     private int preisWochende;
-    private boolean belegt;
 
     public Zimmer(int nummer, int anzahlBetten, boolean badewanne, boolean fernseher, boolean minibar, int preisWerktag,
-	    int preisWochenende, boolean belegt) {
+	    int preisWochenende) {
 	this.nummer = nummer;
 	this.badewanne = badewanne;
 	this.anzahlBetten = anzahlBetten;
@@ -19,7 +18,6 @@ public class Zimmer {
 	this.minibar = minibar;
 	this.preisWerktag = preisWerktag;
 	this.preisWochende = preisWochenende;
-	this.belegt = belegt;
     }
 
     public int getNummer() {
@@ -78,19 +76,11 @@ public class Zimmer {
 	this.preisWochende = preisWochende;
     }
 
-    public boolean istBelegt() {
-	return this.belegt;
-    }
-
-    public void setBelegt(boolean belegt) {
-	this.belegt = belegt;
-    }
-
     @Override
     public String toString() {
 	return Integer.toString(nummer) + "," + Integer.toString(anzahlBetten) + "," + Boolean.toString(badewanne) + ","
 		+ Boolean.toString(fernseher) + "," + Boolean.toString(minibar) + "," + Integer.toString(preisWerktag)
-		+ "," + Integer.toString(preisWochende) + "," + Boolean.toString(belegt);
+		+ "," + Integer.toString(preisWochende);
     }
 
 }

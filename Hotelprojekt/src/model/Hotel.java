@@ -30,4 +30,12 @@ public class Hotel {
     public List<Zimmer> getZimmerList() {
 	return zimmer;
     }
+
+    public void loescheZimmer(int nummer) {
+	for(Zimmer z: zimmer) {
+	    if(z.getNummer() == nummer) {
+		zimmer.remove(z);
+	    }
+	}
+    }
 }

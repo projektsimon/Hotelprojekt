@@ -14,9 +14,9 @@ import model.Zimmer;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-public class Hinzu_Zimmer extends JDialog {
+public class ZimmerDialog extends JDialog {
     private static final long serialVersionUID = 1L;
-    
+
     private JPanel contentPane;
     private JCheckBox chckbxBadewanne;
     private JCheckBox chckbxTv;
@@ -31,7 +31,7 @@ public class Hinzu_Zimmer extends JDialog {
     private JSpinner spPreisWerktag;
     private JSpinner spPreisWochenende;
 
-    public Hinzu_Zimmer(ActionListener listener) {
+    public ZimmerDialog(ActionListener listener) {
 	setModal(true);
 	setAlwaysOnTop(true);
 	setTitle("Zimmer hinzufügen");
@@ -78,22 +78,22 @@ public class Hinzu_Zimmer extends JDialog {
 	btnZimmerSpeichern.setBounds(12, 245, 162, 25);
 	btnZimmerSpeichern.addActionListener(listener);
 	contentPane.add(btnZimmerSpeichern);
-	
+
 	spNummer = new JSpinner();
 	spNummer.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 	spNummer.setBounds(108, 11, 66, 20);
 	contentPane.add(spNummer);
-	
+
 	spBetten = new JSpinner();
 	spBetten.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
 	spBetten.setBounds(108, 40, 66, 20);
 	contentPane.add(spBetten);
-	
+
 	spPreisWerktag = new JSpinner();
 	spPreisWerktag.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 	spPreisWerktag.setBounds(108, 177, 66, 20);
 	contentPane.add(spPreisWerktag);
-	
+
 	spPreisWochenende = new JSpinner();
 	spPreisWochenende.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 	spPreisWochenende.setBounds(108, 206, 66, 20);
@@ -102,28 +102,51 @@ public class Hinzu_Zimmer extends JDialog {
     }
 
     public Zimmer getZimmer() {
-	int nummer = (Integer)spNummer.getValue();
-	int anzahlBetten = (Integer)spBetten.getValue();
+	int nummer = (Integer) spNummer.getValue();
+	int anzahlBetten = (Integer) spBetten.getValue();
 	boolean badewanne = chckbxBadewanne.isSelected();
 	boolean fernseher = chckbxTv.isSelected();
 	boolean minibar = chckbxMinibar.isSelected();
-	int preisWerktag = (Integer)spPreisWerktag.getValue();
-	int preisWochenende = (Integer)spPreisWochenende.getValue();
+	int preisWerktag = (Integer) spPreisWerktag.getValue();
+	int preisWochenende = (Integer) spPreisWochenende.getValue();
 
-	return new Zimmer(nummer, anzahlBetten, badewanne, fernseher, minibar, preisWerktag, preisWochenende, false);
+	return new Zimmer(nummer, anzahlBetten, badewanne, fernseher, minibar, preisWerktag, preisWochenende);
     }
-    
-    public void promptZimmernummerVergeben() {
-	JOptionPane.showMessageDialog(null, "Diese Zimmernummer ist bereits vergeben!", "Fehler", JOptionPane.WARNING_MESSAGE);
+
+    public void promptZimmerExistiertNicht() {
+	JOptionPane.showMessageDialog(null, "Diese Zimmernummer existiert nicht!", "Fehler",
+		JOptionPane.WARNING_MESSAGE);
     }
 
     public void resetDarstellung() {
-	spNummer.setValue((Integer)spNummer.getValue() + 1);
+	spNummer.setValue((Integer) spNummer.getValue() + 1);
 	spBetten.setValue(1);
 	chckbxBadewanne.setSelected(false);
 	chckbxMinibar.setSelected(false);
 	chckbxTv.setSelected(false);
-	spPreisWerktag.setValue(0);
-	spPreisWerktag.setValue(0);
+//	spPreisWerktag.setValue(0);
+//	spPreisWochenende.setValue(0);
+    }
+
+    public int entferneZimmer() {
+	SpinnerNumberModel sModel = new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1));
+	JSpinner spinner = new JSpinner(sModel);
+	int option = JOptionPane.showOptionDialog(null, spinner, "Nummer des zu entfernenden Zimmers",
+		JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+	if (option == JOptionPane.OK_OPTION) {
+	    return (Integer) spinner.getValue();
+	}
+
+	return -1;
+    }
+
+    public boolean promptUeberschreiben() {
+	int n = JOptionPane.showConfirmDialog(null, "Zimmernummer existiert bereits, wollen Sie das Zimmer verändern?", "Zimmeränderung",
+		JOptionPane.YES_NO_OPTION);
+	if (n == JOptionPane.YES_OPTION) {
+	    return true;
+	} else {
+	    return false;
+	}
     }
 }

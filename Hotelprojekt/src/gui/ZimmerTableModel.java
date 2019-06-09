@@ -21,7 +21,7 @@ public class ZimmerTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-	return 8;
+	return 7;
     }
 
     @Override
@@ -46,8 +46,6 @@ public class ZimmerTableModel extends AbstractTableModel {
 	    return "Preis Mo-Fr";
 	case 6:
 	    return "Preis Sa+So";   
-	case 7: 
-	    return "Belegung";
 	default:
 	    return null;
 	}
@@ -66,32 +64,26 @@ public class ZimmerTableModel extends AbstractTableModel {
 	    if(z.hatBadewanne()) {
 		return "\u2714";
 	    } else {
-		return "\u2717";
+		return "\u2718";
 	    }
 	case 3:
 	    if(z.hatMinibar()) {
 		return "\u2714";
 	    } else {
-		return "\u2717";
+		return "\u2718";
 	    }
 	    
 	case 4:
 	    if(z.hatFernseher()) {
 		return "\u2714";
 	    } else {
-		return "\u2717";
+		return "\u2718";
 	    }
 	    
 	case 5:
 	    return Integer.toString(z.getPreisWerktag()) + "€";
 	case 6:
 	    return Integer.toString(z.getPreisWochende()) + "€";
-	case 7:
-	    if(z.istBelegt()) {
-		return "belegt";
-	    } else {
-		return "frei";
-	    }
 	    
 	default:
 	    return null;
@@ -109,7 +101,6 @@ public class ZimmerTableModel extends AbstractTableModel {
 	case 4:
 	case 5:
 	case 6:
-	case 7:
 	    return String.class;
 	default:
 	    return null;

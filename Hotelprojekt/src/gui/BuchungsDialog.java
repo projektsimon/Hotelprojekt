@@ -18,16 +18,17 @@ import java.awt.event.ActionListener;
 
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 
 
 
-public class Hinzu_Gaeste extends JFrame {
+public class BuchungsDialog extends JDialog {
 	private JPanel contentPane;
 
 	/**
 	 * Create the frame.
 	 */
-    public Hinzu_Gaeste(ActionListener listener) {
+    public BuchungsDialog(ActionListener listener) {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 450, 300);
 	contentPane = new JPanel();

@@ -25,8 +25,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.List;
 
@@ -42,7 +40,6 @@ import javax.swing.JScrollPane;
 public class Hauptoberfläche extends JFrame {
 
     private JPanel contentPane;
-    private static ImageIcon icon;
     private JTable tbZimmer;
     private JTable tbBuchungen;
 
@@ -72,9 +69,13 @@ public class Hauptoberfläche extends JFrame {
 	JMenu mnZimmer = new JMenu("Zimmer");
 	menuBar.add(mnZimmer);
 	
-	JMenuItem mntmZimmerHinzufgen = new JMenuItem("Zimmer hinzufügen");
+	JMenuItem mntmZimmerHinzufgen = new JMenuItem("Zimmer hinzuf\u00FCgen / \u00E4ndern");
 	mnZimmer.add(mntmZimmerHinzufgen);
 	mntmZimmerHinzufgen.addActionListener(listener);
+	
+	JMenuItem mntmZimmerEntfernen = new JMenuItem("Zimmer entfernen");
+	mnZimmer.add(mntmZimmerEntfernen);
+	mntmZimmerEntfernen.addActionListener(listener);
 	
 	JMenu mnGste = new JMenu("Gäste");
 	menuBar.add(mnGste);
