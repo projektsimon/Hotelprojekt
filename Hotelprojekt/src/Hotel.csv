@@ -1,2 +1,6 @@
 Zimmer:
 1,6,true,true,true,5,6
+2,4,true,true,true,5,6
+3,3,false,true,false,5,6
+4,2,true,false,false,5,6
+6,8,true,true,false,6,7

@@ -26,15 +26,22 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JTable;
+import javax.swing.SpinnerDateModel;
 import javax.swing.JLabel;
+
+import model.Buchung;
 import model.Zimmer;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 
 @SuppressWarnings("serial")
 public class Hauptoberfläche extends JFrame {
@@ -42,6 +49,8 @@ public class Hauptoberfläche extends JFrame {
     private JPanel contentPane;
     private JTable tbZimmer;
     private JTable tbBuchungen;
+    
+    private Calendar calendar;
 
     /**
      * Konstruktor
@@ -50,7 +59,7 @@ public class Hauptoberfläche extends JFrame {
     	setTitle("Hotelmanager");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setResizable(false);
-	setBounds(100, 100, 970, 434);
+	setBounds(100, 100, 1153, 434);
 	
 	JMenuBar menuBar = new JMenuBar();
 	setJMenuBar(menuBar);
@@ -69,7 +78,7 @@ public class Hauptoberfläche extends JFrame {
 	JMenu mnZimmer = new JMenu("Zimmer");
 	menuBar.add(mnZimmer);
 	
-	JMenuItem mntmZimmerHinzufgen = new JMenuItem("Zimmer hinzuf\u00FCgen / \u00E4ndern");
+	JMenuItem mntmZimmerHinzufgen = new JMenuItem("Zimmer hinzufügen / ändern");
 	mnZimmer.add(mntmZimmerHinzufgen);
 	mntmZimmerHinzufgen.addActionListener(listener);
 	
@@ -79,6 +88,10 @@ public class Hauptoberfläche extends JFrame {
 	
 	JMenu mnGste = new JMenu("Gäste");
 	menuBar.add(mnGste);
+	
+	JMenuItem mntmGsteliste = new JMenuItem("Gästeliste");
+	mntmGsteliste.addActionListener(listener);
+	mnGste.add(mntmGsteliste);
 	
 	JMenu mnBuchung = new JMenu("Buchung");
 	menuBar.add(mnBuchung);
@@ -99,35 +112,55 @@ public class Hauptoberfläche extends JFrame {
 	lblZimmerliste.setBounds(10, 36, 89, 14);
 	contentPane.add(lblZimmerliste);
 	
-	JLabel lblGstezhler = new JLabel("Gästezähler:");
-	lblGstezhler.setBounds(10, 11, 89, 14);
-	contentPane.add(lblGstezhler);
-	
-	JLabel lblZaehler = new JLabel("");
-	lblZaehler.setBounds(85, 11, 46, 14);
-	contentPane.add(lblZaehler);
-	
 	JLabel lblBuchungsliste = new JLabel("Buchungsliste");
 	lblBuchungsliste.setBounds(639, 36, 89, 14);
 	contentPane.add(lblBuchungsliste);
 	
-	tbBuchungen = new JTable();
-	tbBuchungen.setBounds(639, 61, 259, 274);
-	contentPane.add(tbBuchungen);
-	
-	JScrollPane scrollPane = new JScrollPane();
-	scrollPane.setBounds(10, 61, 597, 292);
-	contentPane.add(scrollPane);
+	JScrollPane sPZimmer = new JScrollPane();
+	sPZimmer.setBounds(10, 61, 597, 292);
+	contentPane.add(sPZimmer);
 	
 	tbZimmer = new JTable(new ZimmerTableModel());
-	scrollPane.setViewportView(tbZimmer);
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-	centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-	tbZimmer.setDefaultRenderer(String.class, centerRenderer);
-	tbZimmer.setDefaultRenderer(Integer.class, centerRenderer);
+	sPZimmer.setViewportView(tbZimmer);
+
+	calendar = Calendar.getInstance();
+	
+	SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	
+	SpinnerDateModel dateModel = new SpinnerDateModel();
+	JSpinner spDate = new JSpinner(dateModel);
+	spDate.setEditor(new JSpinner.DateEditor(spDate, dateFormat.toPattern()));
+	spDate.setValue(calendar.getTime());
+	spDate.setBounds(95, 11, 98, 20);
+	contentPane.add(spDate);
+	
+	JLabel lblDatum = new JLabel("Datum");
+	lblDatum.setBounds(10, 11, 46, 14);
+	contentPane.add(lblDatum);
+	
+	JScrollPane sPBuchungen = new JScrollPane();
+	sPBuchungen.setBounds(649, 61, 488, 292);
+	contentPane.add(sPBuchungen);
+	
+	tbBuchungen = new JTable(new BuchungsTableModel());
+	sPBuchungen.setViewportView(tbBuchungen);
+	
+	
+	DefaultTableCellRenderer tbZimmerRenderer = new DefaultTableCellRenderer();
+	tbZimmerRenderer.setHorizontalAlignment(JLabel.CENTER);
+	tbZimmer.setDefaultRenderer(String.class, tbZimmerRenderer);
+	tbZimmer.setDefaultRenderer(Integer.class, tbZimmerRenderer);
+	
+	DateTableCellRenderer tbBuchungsRenderer = new DateTableCellRenderer();
+	tbBuchungsRenderer.setHorizontalAlignment(JLabel.CENTER);
+	tbBuchungen.setDefaultRenderer(String.class, tbBuchungsRenderer);
+	tbBuchungen.setDefaultRenderer(Date.class, tbBuchungsRenderer);
+	
+	
     }
     
-    public void showData(List<Zimmer> zimmer) {
+    public void showData(List<Zimmer> zimmer, List<Buchung> buchungen) {
 	((ZimmerTableModel)tbZimmer.getModel()).setZimmerList(zimmer);
+	((BuchungsTableModel)tbBuchungen.getModel()).setBuchungen(buchungen);
     }
 }

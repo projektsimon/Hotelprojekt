@@ -10,8 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.List;
 
 import gui.*;
+import model.Buchung;
+import model.Buchungsanfrage;
 import model.Hotel;
 import model.Zimmer;
 
@@ -19,6 +22,12 @@ public class Controller implements ActionListener {
 
     private Hauptoberfläche hauptfenster;
     private ZimmerDialog hinzuzimmer;
+    private SmallBuchungsDialog smallBuchung;
+    private OptionsDialog optionsDialog;
+    private GastDialog gastDialog;
+    private GästeListeDialog gaesteListeDialog;
+
+    private List<Zimmer> options;
 
     private Hotel hotel;
 
@@ -39,7 +48,12 @@ public class Controller implements ActionListener {
 	// GUI
 	hauptfenster = new Hauptoberfläche(this);
 	hinzuzimmer = new ZimmerDialog(this);
-	hauptfenster.showData(hotel.getZimmerList());
+	smallBuchung = new SmallBuchungsDialog(this);
+	optionsDialog = new OptionsDialog(this);
+	gastDialog = new GastDialog(this, hotel.getGastCount());
+	gaesteListeDialog = new GästeListeDialog();
+
+	hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
 	hauptfenster.setVisible(true);
     }
 
@@ -49,14 +63,14 @@ public class Controller implements ActionListener {
 	case "Zimmer hinzufügen / ändern":
 	    hinzuzimmer.setVisible(true);
 	    break;
-	    
+
 	case "Zimmer entfernen":
 	    int nummer = hinzuzimmer.entferneZimmer();
 	    System.out.println("Nummer: " + nummer);
-	    if(nummer > 0) {
-		if(hotel.zimmernummerVergeben(nummer)) {
+	    if (nummer > 0) {
+		if (hotel.zimmernummerVergeben(nummer)) {
 		    hotel.loescheZimmer(nummer);
-		    hauptfenster.showData(hotel.getZimmerList());
+		    hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
 		} else {
 		    hinzuzimmer.promptZimmerExistiertNicht();
 		}
@@ -66,7 +80,7 @@ public class Controller implements ActionListener {
 	case "Zimmer speichern":
 	    Zimmer zimmer = hinzuzimmer.getZimmer();
 	    if (hotel.zimmernummerVergeben(zimmer.getNummer())) {
-		if(!hinzuzimmer.promptUeberschreiben()) {
+		if (!hinzuzimmer.promptUeberschreiben()) {
 		    break;
 		} else {
 		    hotel.loescheZimmer(zimmer.getNummer());
@@ -75,7 +89,7 @@ public class Controller implements ActionListener {
 	    hinzuzimmer.setVisible(false);
 	    hotel.addNewZimmer(zimmer);
 	    hinzuzimmer.resetDarstellung();
-	    hauptfenster.showData(hotel.getZimmerList());
+	    hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
 	    break;
 
 	case "Speichern & Verlassen":
@@ -86,7 +100,41 @@ public class Controller implements ActionListener {
 	case "Gespeichertes verwerfen":
 	    hotel = new Hotel();
 	    hotelZuCSV(hotel, file);
-	    hauptfenster.showData(hotel.getZimmerList());
+	    hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
+	    break;
+
+	case "Buchung aufnehmen":
+	    smallBuchung.showDialog();
+	    break;
+
+	case "Zimmer suchen":
+	    Buchungsanfrage anfrage = smallBuchung.getAnfrage();
+	    // Suche nach passendem Zimmer
+	    options = hotel.getOptionen(anfrage);
+	    optionsDialog.reset();
+	    optionsDialog.showData(options, anfrage);
+	    smallBuchung.setVisible(false);
+	    break;
+
+	case "Auswahl bestätigen":
+	    gastDialog.setVisible(true);
+	    break;
+
+	case "Gast speichern":
+	    if (gastDialog.allesAusgefuellt()) {
+		hotel.addBuchung(new Buchung(options.get(optionsDialog.getNummer()), gastDialog.getGast(),
+			smallBuchung.getAnfrage().getZeitraum()));
+		gastDialog.reset();
+		optionsDialog.setVisible(false);
+		hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
+	    } else {
+		gastDialog.unausgefuellteFelder();
+	    }
+	    break;
+	    
+	case "Gästeliste":
+	    gaesteListeDialog.setGäste(hotel.getGäste());
+	    gaesteListeDialog.setVisible(true);
 	    break;
 
 	default:
@@ -108,7 +156,7 @@ public class Controller implements ActionListener {
 	    String zeile;
 	    int status = 0;
 	    while ((zeile = reader.readLine()) != null) {
-		//System.out.println("Zeile: " + zeile);
+		// System.out.println("Zeile: " + zeile);
 		if (zeile.equals("Zimmer: ")) {
 		    status = 0;
 		    continue;
@@ -126,10 +174,10 @@ public class Controller implements ActionListener {
 				Boolean.parseBoolean(elemente[2]), Boolean.parseBoolean(elemente[3]),
 				Boolean.parseBoolean(elemente[4]), Integer.parseInt(elemente[5]),
 				Integer.parseInt(elemente[6])));
-			//System.out.println("Gelesen:");
 		    }
 		}
 	    }
+	    reader.close();
 	} catch (FileNotFoundException e) {
 	    e.printStackTrace();
 	    return new Hotel();
