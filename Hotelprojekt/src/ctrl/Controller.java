@@ -15,6 +15,7 @@ import java.util.List;
 import gui.*;
 import model.Buchung;
 import model.Buchungsanfrage;
+import model.Gast;
 import model.Hotel;
 import model.Zimmer;
 
@@ -131,7 +132,7 @@ public class Controller implements ActionListener {
 		gastDialog.unausgefuellteFelder();
 	    }
 	    break;
-	    
+
 	case "Gästeliste":
 	    gaesteListeDialog.setGäste(hotel.getGäste());
 	    gaesteListeDialog.setVisible(true);
@@ -160,8 +161,11 @@ public class Controller implements ActionListener {
 		if (zeile.equals("Zimmer: ")) {
 		    status = 0;
 		    continue;
-		} else if (zeile.equals("Buchungen")) {
+		} else if (zeile.equals("Gaeste:")) {
 		    status = 1;
+		    continue;
+		} else if (zeile.equals("Buchungen:")) {
+		    status = 2;
 		    continue;
 		}
 
@@ -175,6 +179,22 @@ public class Controller implements ActionListener {
 				Boolean.parseBoolean(elemente[4]), Integer.parseInt(elemente[5]),
 				Integer.parseInt(elemente[6])));
 		    }
+		    break;
+		case 1:
+		    // Gäste werden gelesen
+		    if (elemente.length == 6) {
+			hotel.addGast(new Gast(Integer.parseInt(elemente[0]), elemente[1], elemente[2], elemente[3],
+				elemente[4], elemente[5]));
+		    }
+		    break;
+
+		case 2:
+		    // Buchungen werden gelesen
+		    if (elemente.length == 4) {
+			hotel.addBuchung(Integer.parseInt(elemente[0]), elemente[1], elemente[2],
+				Integer.parseInt(elemente[3]));
+		    }
+		    break;
 		}
 	    }
 	    reader.close();
@@ -195,6 +215,14 @@ public class Controller implements ActionListener {
 	    writer.println("Zimmer:");
 	    for (Zimmer z : hotel.getZimmerList()) {
 		writer.println(z.toString());
+	    }
+	    writer.println("Gaeste:");
+	    for (Gast g : hotel.getGäste()) {
+		writer.println(g.toString());
+	    }
+	    writer.println("Buchungen:");
+	    for (Buchung b : hotel.getBuchungsList()) {
+		writer.println(b.toString());
 	    }
 	    writer.flush();
 	    writer.close();

@@ -1,6 +1,10 @@
 Zimmer:
-1,6,true,true,true,5,6
-2,4,true,true,true,5,6
-3,3,false,true,false,5,6
-4,2,true,false,false,5,6
-6,8,true,true,false,6,7
+1,2,true,true,true,5,6
+2,3,true,true,true,5,6
+3,1,false,false,false,3,4
+4,8,true,true,false,3,4
+5,6,true,true,false,6,10
+Gaeste:
+1,a,b,c,12.06.2019,PayPal
+Buchungen:
+5,12.06.2019,16.06.2019,1

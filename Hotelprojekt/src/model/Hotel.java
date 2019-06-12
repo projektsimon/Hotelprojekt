@@ -56,7 +56,7 @@ public class Hotel {
 
 	// Suche auf passende Bettenanzahl und freien Zeitraum einschränken
 	zimmerSortiert.removeIf(z -> z.getAnzahlBetten() < anfrage.getAnzahlBetten());
-	zimmerSortiert.removeIf(z -> z.getSlot(anfrage.getZeitraum()));
+	zimmerSortiert.removeIf(z -> z.getSlot(anfrage.getZeitraum()) == false);
 
 	@SuppressWarnings("rawtypes")
 	LinkedList<Zimmer> zimmerSelected = (LinkedList) ((LinkedList<Zimmer>) zimmerSortiert).clone();
@@ -92,6 +92,12 @@ public class Hotel {
 	Zimmer z = buchung.getZimmer();
 	z.addBelegung(buchung.getZeitraum());
     }
+    
+    public void addBuchungOhneGast(Buchung buchung) {
+	buchungen.add(buchung);
+	Zimmer z = buchung.getZimmer();
+	z.addBelegung(buchung.getZeitraum());
+    }
 
     public List<Buchung> getBuchungsList() {
 	return buchungen;
@@ -99,5 +105,29 @@ public class Hotel {
 
     public List<Gast> getGäste() {
 	return gaesteListe;
+    }
+    
+    public Zimmer getZimmer(int nummer) {
+	for(Zimmer z : zimmerListe) {
+	    if(z.getNummer() == nummer) {
+		return z;
+	    }
+	}
+	return null;
+    }
+    
+    public Gast getGast(int id) {
+	for(Gast g : gaesteListe) {
+	    if(g.getId() == id) {
+		return g;
+	    }
+	}
+	return null;
+    }
+
+    public void addBuchung(int zimmerNummer, String anfang, String ende, int gastID) {
+	Zimmer z = getZimmer(zimmerNummer);
+	Gast g = getGast(gastID);
+	addBuchungOhneGast(new Buchung(z, anfang, ende, g));
     }
 }
