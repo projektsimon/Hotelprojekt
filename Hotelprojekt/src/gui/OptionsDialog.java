@@ -26,7 +26,8 @@ public class OptionsDialog extends JDialog {
     private JLabel lblTv;
     private JLabel lblMinibar;
     private JLabel lblXBetten;
-    private JButton btnAuswahl;
+    private JButton btnNeuerGast;
+    private JButton btnGastAuswaehlen;
 
     /**
      * Konstruktor
@@ -76,11 +77,17 @@ public class OptionsDialog extends JDialog {
 	lblXBetten.setBounds(276, 11, 123, 14);
 	contentPane.add(lblXBetten);
 	
-	btnAuswahl = new JButton("Auswahl bestätigen");
-	btnAuswahl.setEnabled(false);
-	btnAuswahl.setBounds(253, 264, 146, 23);
-	btnAuswahl.addActionListener(listener);
-	contentPane.add(btnAuswahl);
+	btnNeuerGast = new JButton("Neuen Gast erstellen");
+	btnNeuerGast.setEnabled(false);
+	btnNeuerGast.setBounds(80, 264, 161, 23);
+	btnNeuerGast.addActionListener(listener);
+	contentPane.add(btnNeuerGast);
+	
+	btnGastAuswaehlen = new JButton("Bestehenden Gast auswählen");
+	btnGastAuswaehlen.setEnabled(false);
+	btnGastAuswaehlen.setBounds(331, 264, 230, 23);
+	btnGastAuswaehlen.addActionListener(listener);
+	contentPane.add(btnGastAuswaehlen);
 	
 	
 	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -89,7 +96,8 @@ public class OptionsDialog extends JDialog {
 	tbZimmer.setDefaultRenderer(Integer.class, centerRenderer);
 	tbZimmer.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
 	        public void valueChanged(ListSelectionEvent event) {
-	            btnAuswahl.setEnabled(true);
+	            btnNeuerGast.setEnabled(true);
+	            btnGastAuswaehlen.setEnabled(true);
 	        }
 	    });
     }
@@ -121,6 +129,8 @@ public class OptionsDialog extends JDialog {
 	}
 	
 	((ZimmerTableModel)tbZimmer.getModel()).setZimmerList(zimmer);
+	btnNeuerGast.setEnabled(false);
+	btnGastAuswaehlen.setEnabled(false);
 	setVisible(true);
     }
     
@@ -129,7 +139,8 @@ public class OptionsDialog extends JDialog {
     }
 
     public void reset() {
+	btnNeuerGast.setEnabled(false);
+	btnGastAuswaehlen.setEnabled(false);
 	setVisible(false);
-	btnAuswahl.setEnabled(false);
     }
 }

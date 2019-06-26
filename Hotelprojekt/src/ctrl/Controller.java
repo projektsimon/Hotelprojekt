@@ -27,6 +27,7 @@ public class Controller implements ActionListener {
     private OptionsDialog optionsDialog;
     private GastDialog gastDialog;
     private GästeListeDialog gaesteListeDialog;
+    private WaehleGastDialog waehleGastDialog;
 
     private List<Zimmer> options;
 
@@ -53,6 +54,7 @@ public class Controller implements ActionListener {
 	optionsDialog = new OptionsDialog(this);
 	gastDialog = new GastDialog(this, hotel.getGastCount());
 	gaesteListeDialog = new GästeListeDialog();
+	waehleGastDialog = new WaehleGastDialog(this);
 
 	hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
 	hauptfenster.setVisible(true);
@@ -112,13 +114,25 @@ public class Controller implements ActionListener {
 	    Buchungsanfrage anfrage = smallBuchung.getAnfrage();
 	    // Suche nach passendem Zimmer
 	    options = hotel.getOptionen(anfrage);
-	    optionsDialog.reset();
 	    optionsDialog.showData(options, anfrage);
 	    smallBuchung.setVisible(false);
 	    break;
 
-	case "Auswahl bestätigen":
+	case "Neuen Gast erstellen":
 	    gastDialog.setVisible(true);
+	    break;
+
+	case "Bestehenden Gast auswählen":
+	    waehleGastDialog.setGäste(hotel.getGäste());
+	    waehleGastDialog.setVisible(true);
+	    break;
+
+	case "Gast auswählen":
+	    hotel.addBuchungOhneGast(new Buchung(options.get(optionsDialog.getNummer()), waehleGastDialog.getGastID(),
+		    smallBuchung.getAnfrage().getZeitraum()));
+	    waehleGastDialog.setVisible(false);
+	    optionsDialog.setVisible(false);
+	    hauptfenster.showData(hotel.getZimmerList(), hotel.getBuchungsList());
 	    break;
 
 	case "Gast speichern":

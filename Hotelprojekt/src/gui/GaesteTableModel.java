@@ -51,6 +51,10 @@ public class GaesteTableModel extends AbstractTableModel {
 	    return null;
 	}
     }
+    
+    public Gast getGast(int row) {
+	return gaeste.get(row);
+    }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public Class getColumnClass(int columnIndex) {
